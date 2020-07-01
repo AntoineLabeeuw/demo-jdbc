@@ -1,10 +1,8 @@
 package fr.diginamic.jdbc;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ResourceBundle;
+
+import fr.diginamic.jdbc.dao.FournisseurDaoJdbc;
 
 /**
  * @author antoinelabeeuw
@@ -12,22 +10,17 @@ import java.util.ResourceBundle;
  */
 public class TestUpdate {
 	public static void main(String[] args) throws SQLException {
-		ResourceBundle database = ResourceBundle.getBundle("database");
-		String url = database.getString("database.url");
-		String utilisateur = database.getString("database.user");
-		String motDePasse = database.getString("database.pass");
-		try (Connection uneConnexion = DriverManager.getConnection(url, utilisateur, motDePasse)) {
-
-			Statement statement = uneConnexion.createStatement();
-			try {
-				int nbLignes = statement
-						.executeUpdate("UPDATE FOURNISSEUR SET NOM='La maison des Peintures' WHERE ID=4");
-				System.out.println("nombre de lignes modifiées : " + nbLignes);
-			}
-			finally {
-				statement.close();
-			}
-			uneConnexion.close();
+		FournisseurDaoJdbc daoJbdc = new FournisseurDaoJdbc();
+		int nb = 0;
+		try {
+			nb = daoJbdc.update("La maison des Peintures", "La maison de la Peinture");
+		} catch (SQLException e) {
+			System.err.println("Erreur d'extraction");
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
 		}
+		System.out.println(nb);
+
 	}
 }

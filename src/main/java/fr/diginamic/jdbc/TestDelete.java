@@ -1,33 +1,30 @@
 package fr.diginamic.jdbc;
 
 
-import java.sql.Connection;
-import java.sql.DriverManager;
+
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.ResourceBundle;
+
+
+import fr.diginamic.jdbc.dao.FournisseurDaoJdbc;
+import fr.diginamic.jdbc.entites.Fournisseur;
 
 
 public class TestDelete {
 
 	public static void main(String[] args) throws SQLException {
-		ResourceBundle database = ResourceBundle.getBundle("database");
-		String url = database.getString("database.url");
-		String utilisateur = database.getString("database.user");
-		String motDePasse = database.getString("database.pass");
-		try (Connection uneConnexion = DriverManager.getConnection(url, utilisateur, motDePasse)) {
-
-			Statement statement = uneConnexion.createStatement();
-			try {
-				int nbLignes = statement
-						.executeUpdate("DELETE FROM FOURNISSEUR WHERE ID=4");
-				System.out.println("nombre de lignes supprimées : " + nbLignes);
-			}
-			finally {
-				statement.close();
-			}
-			uneConnexion.close();
+		FournisseurDaoJdbc daoJbdc = new FournisseurDaoJdbc();
+		Fournisseur f = new Fournisseur(4, "La maison des Peintures");
+		boolean deleteCheck = false;
+		try {
+			deleteCheck = daoJbdc.delete(f);
+		} catch (SQLException e) {
+			System.err.println("Erreur d'extraction");
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
 		}
+		System.out.println(deleteCheck);
+
 	}
 
 }
