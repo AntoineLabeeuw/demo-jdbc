@@ -50,8 +50,11 @@ public class FournisseurDaoJdbc implements FournisseurDao {
 
 			Statement statement = uneConnexion.createStatement();
 			try {
-				int nbLignes = statement.executeUpdate("INSERT INTO FOURNISSEUR (ID,NOM) VALUES (" + fournisseur.getId()
-						+ ",'" + fournisseur.getNom() + "'");
+				String sql = "INSERT INTO FOURNISSEUR(ID, NOM) VALUES (?, ?)";
+				PreparedStatement pstatement = uneConnexion.prepareStatement(sql);
+				pstatement.setInt(1, fournisseur.getId());
+				pstatement.setString(2, fournisseur.getNom());
+				int nbLignes = pstatement.executeUpdate();
 				System.out.println("nombre de lignes insérées : " + nbLignes);
 			} finally {
 				statement.close();
